@@ -60,7 +60,7 @@ bool TCPChatServer::run(void)
 				}
 				
 				FD_SET(comSocket[i], &masterSet);
-				
+				break;
 			}
 		}
 	}

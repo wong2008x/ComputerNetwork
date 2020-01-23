@@ -52,7 +52,6 @@ bool TCPChatClient::run(void)
 		chat_interface.DisplayString("CLIENT: RECEIVING ERROR");
 		return false;
 	}
-	
 	char* buffer = new char[msgSize];
 	result = tcp_recv_whole(comSocket, buffer, msgSize, 0);
 	if (result <=0)
@@ -81,10 +80,10 @@ bool TCPChatClient::run(void)
 			chat_interface.DisplayString("CLIENT:  REGISTERED IN SERVER");
 		}break;
 
-		case sv_list:
+		case NET_MESSAGE_TYPE::sv_list:
 		{
 			//no length now 0 slot---TAG
-			uint8_t numInList = buffer[1];
+			uint16_t numInList = buffer[1];
 			for (size_t i = 0; i < numInList; i++)
 			{
 				char name[17];
@@ -95,7 +94,7 @@ bool TCPChatClient::run(void)
 				chat_interface.DisplayString("CLIENT:  RECEIVED USER LIST");
 		}break;
 
-		case sv_add:
+		case NET_MESSAGE_TYPE::sv_add:
 		{
 			char name[17];
 			strncpy(name, &buffer[2], 17);
@@ -106,14 +105,14 @@ bool TCPChatClient::run(void)
 			chat_interface.DisplayString(info);
 		}break;
 		
-		case sv_full:
+		case NET_MESSAGE_TYPE::sv_full:
 		{
 			chat_interface.DisplayString("CLIENT:  SERVER IS FULL");
 			stop();
 			return false;
 		}break;
 
-		case sv_remove:
+		case NET_MESSAGE_TYPE::sv_remove:
 		{
 			std::string user(myNameList[buffer[1]]);
 			user = "CLIENT:  " + user + " LEFT";
@@ -122,7 +121,7 @@ bool TCPChatClient::run(void)
 			myNameList.erase(myNameList.find(buffer[1]));
 		}break;
 
-		case sv_cl_msg:
+		case NET_MESSAGE_TYPE::sv_cl_msg:
 		{
 			char* msgBuff = new char[msgSize - 2];
 			strncpy(msgBuff, &buffer[2], msgSize - 2);
@@ -130,7 +129,7 @@ bool TCPChatClient::run(void)
 			delete[] msgBuff;
 		}break;
 
-		case sv_cl_close:
+		case NET_MESSAGE_TYPE::sv_cl_close:
 		{
 			chat_interface.DisplayString("CLIENT:  SERVER DISCONNECTED");
 			for (unsigned int i = 0; i < 4; i++)
@@ -147,7 +146,7 @@ bool TCPChatClient::run(void)
 }
 bool TCPChatClient::send_message(std::string message)
 {
-	uint16_t length = message.length()+3;
+	uint16_t length = message.size()+3;
 	char* buffer=new char[length+2];
 	memcpy(buffer, &length, sizeof(uint16_t));
 	buffer[2] = NET_MESSAGE_TYPE::sv_cl_msg;

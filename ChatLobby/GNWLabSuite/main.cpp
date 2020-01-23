@@ -111,7 +111,7 @@ WIN_APP::WIN_APP(HINSTANCE hinst, WNDPROC proc)
 	RECT window_size = { 0, 0, back_buffer_width, back_buffer_height };
 	AdjustWindowRect(&window_size, WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME|WS_MAXIMIZEBOX), false);
 
-	window = CreateWindow(	L"Game Networking", L"MW Lab Suite",WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME|WS_MAXIMIZEBOX), 
+	window = CreateWindow(	L"Game Networking", L"GNW Lab Suite",WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME|WS_MAXIMIZEBOX), 
 		CW_USEDEFAULT, CW_USEDEFAULT, window_size.right-window_size.left, window_size.bottom-window_size.top,					
 		NULL, NULL,	application, this );												
 
