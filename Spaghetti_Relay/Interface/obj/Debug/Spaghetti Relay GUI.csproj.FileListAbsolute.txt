@@ -1,0 +1,8 @@
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Debug\Spaghetti Relay GUI.exe.config
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Debug\Spaghetti Relay GUI.exe
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Debug\Spaghetti Relay GUI.pdb
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Interface\obj\Debug\Spaghetti_Relay_GUI.Properties.Resources.resources
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Interface\obj\Debug\Message_Relay_GUI.SpaghettiForm.resources
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Interface\obj\Debug\Spaghetti Relay GUI.csproj.GenerateResource.cache
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Interface\obj\Debug\Spaghetti Relay GUI.exe
+H:\FullSail\Network\SpaghettiRelay_LAB_1\SpaghettiRelay\Project 2018\Interface\obj\Debug\Spaghetti Relay GUI.pdb
