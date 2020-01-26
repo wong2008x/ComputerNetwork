@@ -38,7 +38,7 @@ int Server::update()
 	NetworkMessage msg_In = NetworkMessage(IO::_INPUT);
 	sockaddr_in playerADDR;
 	int recv_Msg= recvfromNetMessage(svSocket, msg_In, &playerADDR);
-	if (recv_Msg ==-1)
+	if (recv_Msg ==0)
 	{
 		if (playerTimer[0] > 50)
 			disconnectClient(0);
@@ -55,10 +55,15 @@ int Server::update()
 	}
 	else
 	{
-
+		if (active)
+			return DISCONNECT;
+		else
+		{
+			return SHUTDOWN;
+		}
 	}
 
-	//updateState();
+	updateState();
 
 	return SUCCESS;
 }
@@ -108,6 +113,12 @@ int Server::sendState()
 void Server::sendClose()
 {
 	// TODO: Send the "SV_CL_CLOSE" message to each client
+	NetworkMessage msg_Out = NetworkMessage(IO::_OUTPUT);
+	msg_Out.writeShort(seqNum);
+	msg_Out.writeByte(SV_CL_CLOSE);
+	sendMessage(playerAddress[0],msg_Out);
+	sendMessage(playerAddress[1], msg_Out);
+	seqNum++;
 
 }
 
@@ -115,6 +126,7 @@ void Server::sendClose()
 int Server::sendMessage(sockaddr_in& destination, NetworkMessage& message)
 {
 	// TODO: Send the message in the buffer to the destination.
+	sendtoNetMessage(svSocket, message, &destination);
 
 	return SUCCESS;
 }
