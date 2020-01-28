@@ -9,3 +9,14 @@ H:\FullSail\Network\Labs\MeatBallTennis\Interface\obj\Debug\MeatballTennis.Prope
 H:\FullSail\Network\Labs\MeatBallTennis\Interface\obj\Debug\Interface.csproj.GenerateResource.cache
 H:\FullSail\Network\Labs\MeatBallTennis\Interface\obj\Debug\MeatballTennis.exe
 H:\FullSail\Network\Labs\MeatBallTennis\Interface\obj\Debug\MeatballTennis.pdb
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Debug\Assets\Ball.png
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Debug\Assets\Paddle.png
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Debug\MeatballTennis.exe
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Debug\MeatballTennis.pdb
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\Interface.csprojAssemblyReference.cache
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\MeatballTennis.GameCanvas.resources
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\MeatballTennis.GameSetup.resources
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\MeatballTennis.Properties.Resources.resources
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\Interface.csproj.GenerateResource.cache
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\MeatballTennis.exe
+D:\Fullsail\Network\ComputerNetwork\MeatBallTennis\Interface\obj\Debug\MeatballTennis.pdb

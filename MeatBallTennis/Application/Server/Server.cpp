@@ -38,7 +38,13 @@ int Server::update()
 	NetworkMessage msg_In = NetworkMessage(IO::_INPUT);
 	sockaddr_in playerADDR;
 	int recv_Msg= recvfromNetMessage(svSocket, msg_In, &playerADDR);
-	if (recv_Msg ==0)
+	int Error = WSAGetLastError();
+	if (recv_Msg >0)
+	{
+		parseMessage(playerADDR, msg_In);
+	
+	}
+	else if (recv_Msg == -1 && Error == EWOULDBLOCK)
 	{
 		if (playerTimer[0] > 50)
 			disconnectClient(0);
@@ -48,10 +54,6 @@ int Server::update()
 		updateState();
 		sendState();
 		seqNum++;
-	}
-	else if (recv_Msg > 0)
-	{
-		parseMessage(playerADDR,msg_In);
 	}
 	else
 	{
@@ -63,8 +65,6 @@ int Server::update()
 		}
 	}
 
-	updateState();
-
 	return SUCCESS;
 }
 
@@ -74,13 +74,68 @@ void Server::stop()
 	// TODO:
 	//       1) Sends a "close" message to each client.
 	//       2) Shuts down the server gracefully (update method should exit with SHUTDOWN code.)
-
+	sendClose();
+	active = false;
+	shutdown(svSocket, SD_BOTH);
+	closesocket(svSocket);
 }
 
 // Parses a message and responds if necessary. (private, suggested)
 int Server::parseMessage(sockaddr_in& source, NetworkMessage& message)
 {
 	// TODO: Parse a message from client "source."
+	uint8_t msg_Recv = message.readByte();
+
+	switch (msg_Recv)
+	{
+	case CL_CONNECT:
+	{
+		if (noOfPlayers == 2)
+			sendFull(source);
+		else
+		{
+			uint8_t revPlay = message.readByte();
+			connectClient(revPlay, source);
+
+			sendOkay(source);
+		}
+		break;
+	}
+	case CL_ALIVE:
+	{
+		if (source.sin_addr.s_addr == playerAddress[0].sin_addr.s_addr && source.sin_port == playerAddress[0].sin_port)
+			playerTimer[0] = 0;
+		if (source.sin_addr.s_addr == playerAddress[1].sin_addr.s_addr && source.sin_port == playerAddress[1].sin_port)
+			playerTimer[1] = 0;
+		break;
+	}
+	case SV_CL_CLOSE:
+	{
+		if (source.sin_addr.s_addr == playerAddress[0].sin_addr.s_addr && source.sin_port == playerAddress[0].sin_port)
+			disconnectClient(0);
+		if (source.sin_addr.s_addr == playerAddress[1].sin_addr.s_addr && source.sin_port == playerAddress[1].sin_port)
+			disconnectClient(1);
+		break;
+	}
+	case CL_KEYS:
+	{
+		uint8_t up = message.readByte();
+		uint8_t down = message.readByte();
+
+		if (source.sin_addr.s_addr == playerAddress[0].sin_addr.s_addr && source.sin_port == playerAddress[0].sin_port)
+		{
+			state.player0.keyUp = up;
+			state.player0.keyDown = down;
+
+		}
+		if (source.sin_addr.s_addr == playerAddress[1].sin_addr.s_addr && source.sin_port == playerAddress[1].sin_port)
+		{
+			state.player1.keyUp = up;
+			state.player1.keyDown = down;
+		}
+		break;
+	}
+	}
 
 	return SUCCESS;
 }
@@ -89,7 +144,12 @@ int Server::parseMessage(sockaddr_in& source, NetworkMessage& message)
 int Server::sendOkay(sockaddr_in& destination)
 {
 	// TODO: Send "SV_OKAY" to the destination.
+	NetworkMessage msg_Out = NetworkMessage(IO::_OUTPUT);
+	msg_Out.writeShort(seqNum);
+	msg_Out.writeByte(SV_OKAY);
 
+	sendMessage(destination,msg_Out);
+	seqNum++;
 	return SUCCESS;
 }
 
@@ -97,7 +157,12 @@ int Server::sendOkay(sockaddr_in& destination)
 int Server::sendFull(sockaddr_in& destination)
 {
 	// TODO: Send "SV_FULL" to the destination.
+	NetworkMessage msg_Out = NetworkMessage(IO::_OUTPUT);
+	msg_Out.writeShort(seqNum);
+	msg_Out.writeByte(SV_FULL);
 
+	sendMessage(destination, msg_Out);
+	seqNum++;
 	return SUCCESS;
 }
 
@@ -105,7 +170,21 @@ int Server::sendFull(sockaddr_in& destination)
 int Server::sendState()
 {
 	// TODO: Send the game state to each client.
+	NetworkMessage msg_Out = NetworkMessage(IO::_OUTPUT);
+	msg_Out.writeShort(seqNum);
+	msg_Out.writeByte(SV_SNAPSHOT);
 
+	msg_Out.writeByte(state.gamePhase);
+	msg_Out.writeShort(state.ballX);
+	msg_Out.writeShort(state.ballY);
+	msg_Out.writeShort(state.player0.y);
+	msg_Out.writeShort(state.player0.score);
+	msg_Out.writeShort(state.player1.y);
+	msg_Out.writeShort(state.player1.score);
+
+	sendMessage(playerAddress[0],msg_Out);
+	sendMessage(playerAddress[1], msg_Out);
+	seqNum++;
 	return SUCCESS;
 }
 
